@@ -1,0 +1,4 @@
+Data:
+time,top/clk=sys_clk,top/rst=reset_n
+0,0,1
+1,1,0

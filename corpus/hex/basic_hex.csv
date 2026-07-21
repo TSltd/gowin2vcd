@@ -1,0 +1,7 @@
+Radix: hex
+Data:
+time,sig_a[7:0],sig_b[7:0]
+0,00,FF
+1,AB,10
+2,CD,20
+3,EF,30
