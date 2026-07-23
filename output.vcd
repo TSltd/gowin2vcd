@@ -1,5 +1,5 @@
 $date
-    2026-07-21 21:30:37.042995
+    2026-07-21 23:30:09.269235
 $end
 $version
     gowin2vcd
@@ -8,64 +8,15 @@ $timescale 1 us $end
 $scope module logic $end
 $scope module u_board $end
 $scope module u_runtime $end
-$scope module u_spi_slave $end
-$var wire 1 ! cs_fall $end
-$var wire 1 " cs_active $end
+$var wire 1 ! rsp_valid $end
 $upscope $end
-$var wire 1 # rsp_valid $end
-$scope module u_spi_slave $end
-$var wire 8 $ debug_tx_pending_seq[7:0] $end
-$var wire 8 % debug_tx_buf_seq[7:0] $end
-$var wire 8 & debug_commit_seq[7:0] $end
-$var wire 8 ' debug_commit_count[7:0] $end
-$var wire 8 ( debug_csfall_count[7:0] $end
-$var wire 1 ) debug_txbuf_load $end
-$upscope $end
-$var wire 8 * cmd_seq[7:0] $end
-$upscope $end
-$upscope $end
-$var wire 8 + debug_saved_seq[7:0] $end
-$scope module u_board $end
-$scope module u_runtime $end
-$var wire 1 , cmd_valid $end
-$scope module u_register_file $end
-$var wire 8 - debug_rsp_count[7:0] $end
-$upscope $end
-$upscope $end
-$upscope $end
-$var wire 8 . debug_tx_seq[7:0] $end
-$scope module u_board $end
-$scope module u_runtime $end
-$var wire 1 / debug_tx_pending_valid $end
-$var wire 1 0 debug_rx_done $end
-$scope module u_register_file $end
-$var wire 16 1 rx_count[15:0] $end
-$var wire 16 2 tx_count[15:0] $end
-$var wire 8 3 debug_rsp_count_reg[7:0] $end
-$upscope $end
-$upscope $end
-$upscope $end
-$var wire 2 4 debug_cmd_state[1:0] $end
-$scope module u_board $end
+$var wire 1 " debug_tx_load $end
 $scope module u_runtime $end
 $scope module u_spi_slave $end
-$var wire 1 5 tx_pending_valid $end
+$var wire 1 # tx_pending_valid $end
 $upscope $end
-$upscope $end
-$var wire 8 6 debug_tx_seq[7:0] $end
-$scope module u_runtime $end
-$scope module u_register_file $end
-$var wire 8 7 debug_build_len[7:0] $end
-$var wire 8 8 debug_build_status[7:0] $end
-$upscope $end
-$upscope $end
-$var wire 1 9 debug_tx_load $end
-$scope module u_runtime $end
-$scope module u_register_file $end
-$var wire 8 : debug_rsp_len_reg[7:0] $end
-$var wire 8 ; debug_rsp_status_reg[7:0] $end
-$var wire 8 < debug_rsp_payload0_reg[7:0] $end
-$upscope $end
+$var wire 1 $ cmd_valid $end
+$var wire 1 % debug_rx_done $end
 $upscope $end
 $upscope $end
 $upscope $end
@@ -74,52 +25,10 @@ $dumpvars
 0!
 0"
 0#
-b01111111 $
-b01111110 %
-b01111110 &
-b00001100 '
-b00110010 (
-0)
-b01111111 *
-b01111111 +
-0,
-b00001101 -
-b01111111 .
-0/
-00
-b0000000000110010 1
-b0000000000001101 2
-b00001101 3
-b00 4
-15
-b01111111 6
-b00000100 7
-b00000000 8
-09
-b00000100 :
-b00000000 ;
-b00000000 <
+0$
+0%
 $end
 #1
-b01111111 $
-b01111110 %
-b01111110 &
-b00001100 '
-b00110010 (
-b01111111 *
-b01111111 +
-b00001101 -
-b01111111 .
-b0000000000110010 1
-b0000000000001101 2
-b00001101 3
-b00 4
-b01111111 6
-b00000100 7
-b00000000 8
-b00000100 :
-b00000000 ;
-b00000000 <
 #2
 #3
 #4
@@ -2166,16 +2075,13 @@ b00000000 <
 #2045
 #2046
 #2047
+1$
 #2048
 1"
-b01111111 %
-b01111111 &
-b00001101 '
-b00110011 (
-1)
-05
+0$
 #2049
-0)
+0"
+1#
 #2050
 #2051
 #2052

@@ -5,6 +5,7 @@ Command-line interface for gowin2vcd.
 from __future__ import annotations
 
 import argparse
+import logging
 import sys
 
 from .exceptions import EmptyCapture
@@ -13,6 +14,8 @@ from .exceptions import ParseError
 from .exceptions import UnsupportedFormat
 from .parser import GowinCSVParser
 from .vcd import VCDWriter
+
+logger = logging.getLogger("gowin2vcd")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -51,9 +54,19 @@ def build_parser() -> argparse.ArgumentParser:
         help="Override the timescale unit (e.g. 'ns', 'us', 'ps')",
     )
     ap.add_argument(
+        "--verify",
+        action="store_true",
+        help="Print per-signal change counts (diagnostic mode)",
+    )
+    ap.add_argument(
         "--quiet",
         action="store_true",
         help="Suppress progress output",
+    )
+    ap.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Enable debug-level logging",
     )
     return ap
 
@@ -61,6 +74,9 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     ap = build_parser()
     args = ap.parse_args(argv)
+
+    # Configure logging
+    _setup_logging(args.quiet, args.verbose)
 
     # Build include/exclude sets
     include_set: set[str] | None = None
@@ -71,7 +87,9 @@ def main(argv: list[str] | None = None) -> int:
         exclude_set = set(args.exclude)
 
     try:
+        logger.info("Parsing %s", args.input)
         parser = GowinCSVParser(args.input)
+        logger.debug("Found %d signals, %d groups", len(parser.signals), len(parser.groups))
 
         writer = VCDWriter(
             args.output,
@@ -83,7 +101,11 @@ def main(argv: list[str] | None = None) -> int:
             progress=None if args.quiet else _progress_cb,
         )
 
+        logger.info("Writing VCD to %s", args.output)
         stats = writer.write(parser)
+
+        if args.verify and stats.per_signal_changes:
+            _print_verify(stats)
 
         if not args.quiet:
             _print_summary(stats)
@@ -91,23 +113,37 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     except FileNotFoundError as exc:
-        print(f"Error: file not found — {exc.filename}", file=sys.stderr)
+        logger.error("file not found — %s", exc.filename)
         return 1
     except ParseError as exc:
-        print(f"Parse error: {exc}", file=sys.stderr)
+        logger.error("Parse error: %s", exc)
         return 1
     except UnsupportedFormat as exc:
-        print(f"Unsupported format: {exc}", file=sys.stderr)
+        logger.error("Unsupported format: %s", exc)
         return 1
     except EmptyCapture as exc:
-        print(f"Empty capture: {exc}", file=sys.stderr)
+        logger.error("Empty capture: %s", exc)
         return 1
     except GowinError as exc:
-        print(f"Error: {exc}", file=sys.stderr)
+        logger.error("Error: %s", exc)
         return 1
     except Exception as exc:
-        print(f"Unexpected error: {exc}", file=sys.stderr)
+        logger.error("Unexpected error: %s", exc)
         return 1
+
+
+def _setup_logging(quiet: bool, verbose: bool) -> None:
+    """Configure the root logger for gowin2vcd."""
+    level = logging.WARNING
+    if verbose:
+        level = logging.DEBUG
+    elif not quiet:
+        level = logging.INFO
+
+    handler = logging.StreamHandler(sys.stderr)
+    handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+    logger.addHandler(handler)
+    logger.setLevel(level)
 
 
 def _progress_cb(current: int, total: int) -> None:
@@ -117,6 +153,16 @@ def _progress_cb(current: int, total: int) -> None:
         print(f"\r  Processed {current} samples...", end="", file=sys.stderr)
     if current == total:
         print(file=sys.stderr)
+
+
+def _print_verify(stats) -> None:
+    """Print per-signal change counts in a formatted table."""
+    print("\n  Per-signal change counts:")
+    changes = stats.per_signal_changes or {}
+    max_name_len = max((len(name) for name in changes), default=0)
+    max_count_len = max((len(str(c)) for c in changes.values()), default=0)
+    for name, count in sorted(changes.items(), key=lambda x: -x[1]):
+        print(f"    {name:<{max_name_len}}  {count:>{max_count_len}} changes")
 
 
 def _print_summary(stats) -> None:

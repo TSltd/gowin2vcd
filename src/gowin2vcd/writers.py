@@ -42,6 +42,7 @@ class ConversionStats:
     runtime: float = 0.0
     bytes_written: int = 0
     output_path: str = ""
+    per_signal_changes: dict[str, int] | None = None
 
     @property
     def compression_ratio(self) -> float | None:
@@ -137,6 +138,7 @@ class ValueChangeWriter(WaveWriter):
 
         # Phase 5: write changes
         changes = 0
+        per_signal: dict[str, int] = {s.fullname: 0 for s in signals}
         last_ts = first.timestamp
         sample_count = 1
         prev_values: dict[str, str] = {
@@ -163,6 +165,7 @@ class ValueChangeWriter(WaveWriter):
                 ident = self._ids[sig.fullname]
                 self._write_value(ident, bits)
                 changes += 1
+                per_signal[sig.fullname] += 1
 
             if self._progress and sample_count % 1000 == 0:
                 self._progress(sample_count, 0)
@@ -181,6 +184,7 @@ class ValueChangeWriter(WaveWriter):
             value_changes=changes,
             duration=duration,
             runtime=round(elapsed, 3),
+            per_signal_changes=per_signal,
         )
         self._update_stats(stats)
 
