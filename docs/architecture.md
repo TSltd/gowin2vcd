@@ -130,7 +130,7 @@ Future output formats can be added by implementing the WaveWriter interface.
 
 ## Writing a New Output Format
 
-1. Create a new module (e.g. `json.py`)
+1. Create a new module (e.g. `fst.py`)
 2. Implement a class with a `write(parser)` method
 3. The writer accesses `parser.signals`, `parser.metadata`, and `parser.iter_samples()`
 4. Wire it into `cli.py`
