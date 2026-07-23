@@ -54,8 +54,27 @@ time unit: us,top/clk,top/rst,top/uut/data[7:0]
 
 - **Time unit in header**: `time unit: us` may appear in the first column
   of the data header row, or as a separate header line.
-- **Aliases**: Signal names may include an alias: `top/clk=sys_clk`.
+- **Aliases**: Signal headers may optionally contain an alias:
+
+```
+top/clk=sys_clk
+```
+
+where:
+
+- `top/clk` is the full hierarchical signal path
+- `sys_clk` is the display alias
+
+The converter preserves both names internally.
+
 - **No Groups section**: The file may skip straight from header to `Data:`.
 - **No header metadata**: The file may start directly with `Data:`.
 - **Bare `Data:`**: `Data:` on its own line, followed by a header row.
 - **Inline `Data:`**: `Data: time unit: us,sig1,sig2` on one line.
+
+## Notes
+
+This parser has been validated against production Gowin GAO captures.
+Unknown metadata fields are preserved where possible, allowing future
+software versions to introduce additional header fields without breaking
+parsing.

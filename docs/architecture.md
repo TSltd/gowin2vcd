@@ -68,6 +68,18 @@ Wraps the `Scanner` and enriches raw data into typed model objects:
 - `detect_radix()` — auto-detect binary/hex/decimal
 - `to_binary()` — convert any value to binary string with X/Z handling
 
+### Writer Framework (`writers.py`)
+
+All output formats derive from `WaveWriter`.
+
+Formats based on value changes (such as VCD) inherit from
+`ValueChangeWriter`, which provides shared functionality for:
+
+- change detection
+- timestamp validation
+- progress callbacks
+- conversion statistics
+
 ### VCD Writer (`vcd.py`)
 
 Streaming VCD writer with:
@@ -94,19 +106,27 @@ Stub — requires external backend.
 ## Data Flow
 
 ```
-CSV file
-  │
-  ▼
-Scanner (single pass)
-  │
-  ├── ScanResult.metadata  ──►  Metadata
-  ├── ScanResult.groups    ──►  list[Group]
-  ├── ScanResult.header    ──►  list[str]
-  └── ScanResult.rows      ──►  list[Sample]
-                                  │
-                                  ▼
-                              VCDWriter / GTKWSaveWriter / FSTWriter
+rows (iterator)
+      │
+      ▼
+iter_samples()
+      │
+      ▼
+Sample stream
+      │
+      ├──► VCDWriter
+      ├──► JSONWriter
+      ├──► GTKWSaveWriter
+      └──► FSTWriter
 ```
+
+## Current output formats:
+
+- VCD
+- JSON
+- GTKWave save files
+
+Future output formats can be added by implementing the WaveWriter interface.
 
 ## Writing a New Output Format
 
