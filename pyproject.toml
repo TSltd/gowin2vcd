@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gowin2vcd"
-version = "0.9.0"
+version = "0.9.1"
 description = "Convert Gowin GAO CSV captures to VCD waveform format."
 readme = "README.md"
 requires-python = ">=3.10"
