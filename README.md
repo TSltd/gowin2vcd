@@ -2,9 +2,10 @@
 
 Convert Gowin GAO CSV captures to VCD waveform format.
 
+[![PyPI version](https://img.shields.io/pypi/v/gowin2vcd.svg)](https://pypi.org/project/gowin2vcd/)
+[![Python](https://img.shields.io/pypi/pyversions/gowin2vcd.svg)](https://pypi.org/project/gowin2vcd/)
+[![License](https://img.shields.io/pypi/l/gowin2vcd.svg)](LICENSE)
 [![Tests](https://github.com/TSltd/gowin2vcd/actions/workflows/tests.yml/badge.svg)](https://github.com/TSltd/gowin2vcd/actions/workflows/tests.yml)
-[![PyPI version](https://img.shields.io/pypi/v/gowin2vcd)](https://pypi.org/project/gowin2vcd/)
-[![Python versions](https://img.shields.io/pypi/pyversions/gowin2vcd)](https://pypi.org/project/gowin2vcd/)
 
 ## Features
 
